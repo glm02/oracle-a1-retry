@@ -1,0 +1,7 @@
+config.env
+*.pem
+*.cer
+*.key
+*.log
+__pycache__/
+*.pyc
