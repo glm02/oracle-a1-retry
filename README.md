@@ -29,6 +29,9 @@ petit tableau de bord pour suivre ça sans avoir à lire les journaux.
   rencontrée sous Windows avec un antivirus qui inspecte le trafic HTTPS
   (Avast, AVG, Kaspersky, Bitdefender...), voir plus bas.
 
+Une alerte Telegram optionnelle peut être envoyée dès que l'instance est
+prête (variables `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` dans `config.env`).
+
 ## Prérequis
 
 1. [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm)

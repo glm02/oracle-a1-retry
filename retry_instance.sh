@@ -73,6 +73,16 @@ while true; do
     IP=$("$OCI_BIN" compute instance list-vnics --instance-id "$INSTANCE_ID" \
       --query "data[0].\"public-ip\"" --raw-output --no-retry 2>&1)
     log "IP PUBLIQUE : $IP"
+
+    # Alerte Telegram optionnelle : renseigne TELEGRAM_BOT_TOKEN et
+    # TELEGRAM_CHAT_ID dans config.env pour la recevoir (crée un bot avec
+    # @BotFather, récupère ton chat id avec @userinfobot).
+    if [ -n "${TELEGRAM_BOT_TOKEN:-}" ] && [ -n "${TELEGRAM_CHAT_ID:-}" ]; then
+      curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+        -d chat_id="${TELEGRAM_CHAT_ID}" \
+        -d text="Instance Oracle prête ! IP publique : ${IP}" >/dev/null
+      log "Alerte Telegram envoyée."
+    fi
     break
   fi
 
