@@ -10,6 +10,12 @@ jours, selon la région. Ce dépôt automatise le "essaie, échoue, réessaie pl
 tard" avec un rythme qui ne se fait pas limiter par l'API Oracle, plus un
 petit tableau de bord pour suivre ça sans avoir à lire les journaux.
 
+![Tableau de bord : instance obtenue](docs/dashboard-succes.png)
+
+**La VM est réservée directement** : dès qu'une tentative passe, Oracle crée
+l'instance et l'allume. Rien à confirmer de ton côté, et elle reste gratuite
+tant que tu restes dans les limites Always Free.
+
 ## Ce qu'il y a dedans
 
 - **`setup_network.sh`** — crée le réseau minimal (VCN, passerelle internet,
@@ -21,16 +27,26 @@ petit tableau de bord pour suivre ça sans avoir à lire les journaux.
   - `429 Too Many Requests` (on a insisté trop vite) → pause de 10 à 15 minutes
   - toute autre erreur → arrêt immédiat (pas la peine de boucler sur une
     vraie erreur de config)
-- **`dashboard/server.py`** — petit serveur local (stdlib Python seulement,
-  aucune dépendance) qui lit le journal et sert une page HTML qui se
-  rafraîchit toute seule : statut en cours, prochaine tentative, historique,
-  IP publique dès que c'est bon.
+- **`dashboard/server.py`** — tableau de bord local (bibliothèque standard
+  Python, aucune dépendance, écoute sur `127.0.0.1` uniquement) :
+  - compte à rebours en direct jusqu'à la prochaine tentative ;
+  - détection du script : il signale s'il ne tourne plus, avec un bouton
+    « Relancer le script » (sans risque de doublon) ;
+  - historique regroupé par tentative, filtrable (capacité, 429, erreurs),
+    avec le temps de réponse d'Oracle et la pause appliquée ;
+  - bande des 80 dernières tentatives en couleur ;
+  - dès le succès : IP publique et commande `ssh` à copier en un clic ;
+  - lisible sur téléphone.
 - **`windows/fix_antivirus_tls.ps1`** — corrige une erreur très spécifique
   rencontrée sous Windows avec un antivirus qui inspecte le trafic HTTPS
   (Avast, AVG, Kaspersky, Bitdefender...), voir plus bas.
 
 Une alerte Telegram optionnelle peut être envoyée dès que l'instance est
 prête (variables `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` dans `config.env`).
+
+| En attente de capacité | Sur téléphone |
+|---|---|
+| ![En attente](docs/dashboard-attente.png) | ![Téléphone](docs/dashboard-mobile.png) |
 
 ## Prérequis
 
